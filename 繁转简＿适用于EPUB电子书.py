@@ -56,9 +56,22 @@ def convert_epub(epub_input, epub_output):
 
     print(f'转换完成！简体版 EPUB 已保存至 {epub_output}')
 
-# 适用于 GitHub Codespaces
-epub_input = "/workspaces/input.epub"  # 先上传 input.epub 到 /workspaces/
-epub_output = "/workspaces/output_simplified.epub"
+def batch_convert_epub(input_folder, output_foler):
+    '''批量转换文件夹中的所有EPUB文件'''
+    os.makedirs(output_foler, exist_ok=True)
 
-convert_epub(epub_input, epub_output)
+    for file in os.listdir(input_folder):
+        if file.endswith(".epub"):
+            epub_input = os.path.join(input_folder, file)
+            epub_output = os.path.join(output_foler, f"simplified_{file}")
+            print(f"正在转换{epub_input}...")
+            convert_epub(epub_input, epub_output)
+
+    print("所有文件转换完成")
+
+# 适用于 GitHub Codespaces
+input_folder = "/workspaces/Code-space/input"  # 先上传 input.epub 到 /workspaces/
+output_folder = "/workspaces/Code-space/converted_epubs"
+
+convert_epub(input_folder, output_folder)
     

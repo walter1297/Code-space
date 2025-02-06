@@ -1,0 +1,11 @@
+prefix=/tmp/build-via-sdist-3nxq_gbp/opencc-1.1.9/build/lib.linux-x86_64-cpython-312/opencc/clib
+exec_prefix=${prefix}
+libdir=/tmp/build-via-sdist-3nxq_gbp/opencc-1.1.9/build/lib.linux-x86_64-cpython-312/opencc/clib/lib
+includedir=/tmp/build-via-sdist-3nxq_gbp/opencc-1.1.9/build/lib.linux-x86_64-cpython-312/opencc/clib/include
+
+Name: opencc
+Description: Open Chinese Convert
+Version: 1.1.9
+Requires:
+Libs: -L${libdir} -lopencc
+Cflags: -I${includedir}/opencc
