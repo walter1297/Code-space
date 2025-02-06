@@ -37,17 +37,24 @@ def process_epub(extract_path):
                 process_html_file(file_path)
 
 def create_epub(output_path, extract_path):
-    """重新打包 EPUB 文件"""
+    """重新打包 EPUB 文件（正确处理mimetype）"""
     with zipfile.ZipFile(output_path, 'w', zipfile.ZIP_DEFLATED) as zip_ref:
+        # 优先添加mimetype并不压缩
+        mimetype_path = os.path.join(extract_path, 'mimetype')
+        if os.path.exists(mimetype_path):
+            zip_ref.write(mimetype_path, 'mimetype', compress_type=zipfile.ZIP_STORED)
+        # 添加其他文件
         for root, _, files in os.walk(extract_path):
             for file in files:
+                if file == 'mimetype':
+                    continue  # 已单独处理
                 file_path = os.path.join(root, file)
                 arcname = os.path.relpath(file_path, extract_path)
                 zip_ref.write(file_path, arcname)
 
 def convert_epub(epub_input, epub_output):
     """主函数：解压 -> 转换 -> 重新打包"""
-    extract_path = "/workspaces/extracted_epub"  # 适用于 Codespaces
+    extract_path = "/workspaces/extracted_epub"
     os.makedirs(extract_path, exist_ok=True)
 
     extract_epub(epub_input, extract_path)
@@ -56,22 +63,22 @@ def convert_epub(epub_input, epub_output):
 
     print(f'转换完成！简体版 EPUB 已保存至 {epub_output}')
 
-def batch_convert_epub(input_folder, output_foler):
-    '''批量转换文件夹中的所有EPUB文件'''
-    os.makedirs(output_foler, exist_ok=True)
+def batch_convert_epub(input_folder, output_folder):
+    """批量转换文件夹中的所有EPUB文件"""
+    os.makedirs(output_folder, exist_ok=True)
 
     for file in os.listdir(input_folder):
         if file.endswith(".epub"):
             epub_input = os.path.join(input_folder, file)
-            epub_output = os.path.join(output_foler, f"simplified_{file}")
-            print(f"正在转换{epub_input}...")
+            epub_output = os.path.join(output_folder, f"simplified_{file}")
+            print(f"正在转换 {epub_input}...")
             convert_epub(epub_input, epub_output)
 
     print("所有文件转换完成")
 
 # 适用于 GitHub Codespaces
-input_folder = "/workspaces/Code-space/input"  # 先上传 input.epub 到 /workspaces/
+input_folder = "/workspaces/Code-space/input"
 output_folder = "/workspaces/Code-space/converted_epubs"
 
-convert_epub(input_folder, output_folder)
-    
+# 执行批量转换
+batch_convert_epub(input_folder, output_folder)
