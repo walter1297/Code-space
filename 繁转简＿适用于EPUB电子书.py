@@ -2,9 +2,8 @@ import os
 import zipfile
 from bs4 import BeautifulSoup
 import opencc
-from ebooklib import epub
 
-# 繁体转简体转换器
+# 初始化繁体转简体转换器
 converter = opencc.OpenCC('t2s')
 
 def extract_epub(epub_path, extract_path):
@@ -48,7 +47,7 @@ def create_epub(output_path, extract_path):
 
 def convert_epub(epub_input, epub_output):
     """主函数：解压 -> 转换 -> 重新打包"""
-    extract_path = 'extracted_epub'
+    extract_path = "/workspaces/extracted_epub"  # 适用于 Codespaces
     os.makedirs(extract_path, exist_ok=True)
 
     extract_epub(epub_input, extract_path)
@@ -57,5 +56,9 @@ def convert_epub(epub_input, epub_output):
 
     print(f'转换完成！简体版 EPUB 已保存至 {epub_output}')
 
-# 示例使用
-convert_epub('input.epub', 'output_simplified.epub')
+# 适用于 GitHub Codespaces
+epub_input = "/workspaces/input.epub"  # 先上传 input.epub 到 /workspaces/
+epub_output = "/workspaces/output_simplified.epub"
+
+convert_epub(epub_input, epub_output)
+    
