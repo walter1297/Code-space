@@ -75,6 +75,7 @@ def download_thread_worker(file_url, requests_session, bytes_queue):
     try:
         with requests_session.get(file_url, stream=True, timeout=15) as http_response:
             http_response.raise_for_status()
+            #这个是request库里的一个方法，检查服务器返回的http响应状态码，如果是不成功就不会执行接下来的代码。
             for data_chunk in http_response.iter_content(chunk_size=8192):
                 bytes_queue.put(len(data_chunk))
     except RequestException as exception:
